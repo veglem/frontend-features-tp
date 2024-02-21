@@ -1,15 +1,17 @@
-export class Popup{
-    #props
-    #parent;
+import {PopupEventsType} from "./events.js";
+import {AppEventMaker} from "../../modules/eventMaker.js";
 
-    /**
-     * @param {HTMLElement} parent
-    */
+export class Popup{
+    #props;
+    #parent;
+    id;
+
     constructor(parent) {
         this.#parent = parent;
         this.#props = {
             id: crypto.randomUUID()
         }
+        this.id = this.#props.id;
     }
 
     get self(){
@@ -22,10 +24,18 @@ export class Popup{
 
     closeHandle(event){
         event.preventDefault();
-        this.removeListeners();
-        this.self.remove();
+        AppEventMaker.notify(PopupEventsType.POPUP_CLOSE, this.#props.id);
     }
     closeHandle = this.closeHandle.bind(this);
+
+    close(id){
+        if (id === this.id){
+            this.removeListeners();
+            this.unsubscribeEvents();
+            this.self.remove();
+        }
+    }
+    close = this.close.bind(this);
 
     addListeners(){
         document.querySelector(`#popup-${this.#props.id} > .popup__close-btn`)
@@ -37,6 +47,14 @@ export class Popup{
             .removeEventListener('click', this.closeHandle);
     }
 
+    subscribeEvents(){
+        AppEventMaker.subscribe(PopupEventsType.POPUP_CLOSE, this.close);
+    }
+
+    unsubscribeEvents(){
+        AppEventMaker.unsubscribe(PopupEventsType.POPUP_CLOSE, this.close);
+    }
+
     render(){
         let template = Handlebars.templates["popup.hbs"];
 
@@ -45,5 +63,6 @@ export class Popup{
             template(this.#props));
 
         this.addListeners();
+        this.subscribeEvents();
     }
 }
