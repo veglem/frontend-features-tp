@@ -1,0 +1,35 @@
+.popup{
+    position: absolute;
+    height: 350px;
+    width: 400px;
+
+    border-radius: 20px;
+    backdrop-filter: blur(80px);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.popup__close-btn{
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    right: 0;
+    top: 0;
+
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(118, 118, 128, 0.7);
+    border-left: 1px solid rgba(118, 118, 128, 0.7);
+    border-radius: 0 20px 0 20px;
+
+    background: rgba(0, 0, 0, 0);
+}
+
+.popup__close-btn:active{
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.popup-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
